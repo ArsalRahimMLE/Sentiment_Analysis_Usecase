@@ -20,5 +20,6 @@ from . import views
 urlpatterns = [
      path('model_metrics', views.model_metrics),
      path('sentiment_analysis', views.sentiment),
-     path('reviews',views.reviews)
+     path('reviews',views.reviews),
+     path('model_comparison', views.models_comparison),
  ]

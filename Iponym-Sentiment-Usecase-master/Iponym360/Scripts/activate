@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\Sj\Downloads\Iponym-Sentiment-Usecase\Iponym360"
+VIRTUAL_ENV="C:\Users\CodexNow\Desktop\New folder\Iponym-Sentiment-Usecase-master\Iponym360"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
