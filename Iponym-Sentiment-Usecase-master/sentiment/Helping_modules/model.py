@@ -1,3 +1,4 @@
+from sklearn import metrics
 from sklearn.metrics import accuracy_score, recall_score, precision_score
 import pickle
 from sklearn.linear_model import LogisticRegression
@@ -5,7 +6,8 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
-
+from sklearn.metrics import roc_curve, roc_auc_score
+from numpy import array
 def fetch_model():
     """
     load model from pickle file
@@ -85,4 +87,10 @@ def display_confusion_matrix(ypred, y_test):
         """
     Confusion_Matrix = confusion_matrix(ypred, y_test)
     return Confusion_Matrix
+
+def display_roc_curve (y_test, preds):
+
+    fpr, tpr, threshold = metrics.roc_curve(y_test, preds)
+    roc_values = array([fpr, tpr, threshold])
+    return roc_values
 
