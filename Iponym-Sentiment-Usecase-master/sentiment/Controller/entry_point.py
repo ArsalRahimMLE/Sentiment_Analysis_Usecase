@@ -156,3 +156,17 @@ def ratings():
     response = df.original_rating.value_counts()
     response = response.to_json()
     return response
+
+def recommended_items():
+    # 01 fetch data
+    df = database.fetch_data()
+    response = df['Recommended IND'].value_counts()
+    response = response.to_json()
+    return response
+
+def class_name():
+    # 01 fetch data
+    df = database.fetch_data()
+    response = df['Class Name'].value_counts()
+    response = response.to_json()
+    return response

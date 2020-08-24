@@ -46,3 +46,11 @@ def display_age(request):
 def display_rating(request):
     response = entry_point.ratings()
     return HttpResponse(response)
+
+def display_recommended(request):
+    response = entry_point. recommended_items()
+    return HttpResponse(response)
+
+def display_class_name(request):
+    response = entry_point.class_name()
+    return HttpResponse(response)
