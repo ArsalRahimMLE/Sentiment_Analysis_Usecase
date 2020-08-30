@@ -133,34 +133,51 @@ def get_data_stats():
     response = {'Length of data': data_length, 'Train data': train_len, 'Test data' : test_len}
     return response
 
-def make_word_cloud():
+def make_word_cloud(product):
     # 01 Fetching data
     df = database.fetch_data()
-    """ 02 taking clean_reviews column, splitting it in words then 
-        counting the frequency of each word, taking top 100 frequencies
-    """""
-    response = df.Clean_Reviews.str.split(expand=True).stack().value_counts()[:100]
+    # 02 filter dataset
+    if product:
+        selected = df[df['Class Name'] == product]
+        response = selected.Clean_Reviews.str.split(expand=True).stack().value_counts()[:100]
+    else:
+        response = df.Clean_Reviews.str.split(expand=True).stack().value_counts()[:100]
     response = response.to_json()
     return response
 
-def display_age():
+def display_age(product):
     # 01 Fetch data
     df = database.fetch_data()
-    response = df.Age.value_counts()
+    # 02 filter dataset
+    if product:
+        selected = df[df['Class Name'] == product]
+        response = selected.Age.value_counts()
+    else:
+        response = df.Age.value_counts()
     response = response.to_json()
     return response
 
-def ratings():
+def ratings(product):
     # 01 Fetch data
     df = database.fetch_data()
-    response = df.original_rating.value_counts()
+    # 02 filter dataset
+    if product:
+        selected = df[df['Class Name'] == product]
+        response = selected.original_rating.value_counts()
+    else:
+        response = df.original_rating.value_counts()
     response = response.to_json()
     return response
 
-def recommended_items():
+def recommended_items(product):
     # 01 fetch data
     df = database.fetch_data()
-    response = df['Recommended IND'].value_counts()
+    # 02 filter dataset
+    if product:
+        selected = df[df['Class Name'] == product]
+        response = selected['Recommended IND'].value_counts()
+    else:
+        response = df['Recommended IND'].value_counts()
     response = response.to_json()
     return response
 
