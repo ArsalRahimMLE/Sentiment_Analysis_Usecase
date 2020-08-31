@@ -137,7 +137,10 @@ def get_data_stats():
     response = {'Length of data': data_length, 'Train data': train_len, 'Test data': test_len}
     return response
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ef43f3479104efa10c2a83bcc0a7c418391179c4
 def make_word_cloud(product):
     # 01 Fetching data
     df = database.fetch_data()
@@ -150,7 +153,10 @@ def make_word_cloud(product):
     response = response.to_json()
     return response
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ef43f3479104efa10c2a83bcc0a7c418391179c4
 def display_age(product):
     # 01 Fetch data
     df = database.fetch_data()
@@ -163,6 +169,7 @@ def display_age(product):
     response = response.to_json()
     return response
 
+<<<<<<< HEAD
 
 def ratings(product):
     # 01 Fetch data
@@ -182,6 +189,25 @@ def recommended_items(product):
     df = database.fetch_data()
     if product:
         # 02 filter dataframe with respect to product #
+=======
+def ratings(product):
+    # 01 Fetch data
+    df = database.fetch_data()
+    # 02 filter dataset
+    if product:
+        selected = df[df['Class Name'] == product]
+        response = selected.original_rating.value_counts()
+    else:
+        response = df.original_rating.value_counts()
+    response = response.to_json()
+    return response
+
+def recommended_items(product):
+    # 01 fetch data
+    df = database.fetch_data()
+    # 02 filter dataset
+    if product:
+>>>>>>> ef43f3479104efa10c2a83bcc0a7c418391179c4
         selected = df[df['Class Name'] == product]
         response = selected['Recommended IND'].value_counts()
     else:

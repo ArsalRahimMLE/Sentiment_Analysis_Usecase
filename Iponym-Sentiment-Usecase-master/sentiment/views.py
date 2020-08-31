@@ -51,9 +51,15 @@ def display_rating(request):
     response = entry_point.ratings(category)
     return HttpResponse(response)
 
+<<<<<<< HEAD
 def get_recommended(request):
     category = request.GET.get('product')
     response = entry_point.recommended_items(category)
+=======
+def display_recommended(request):
+    category = request.GET.get('product')
+    response = entry_point. recommended_items(category)
+>>>>>>> ef43f3479104efa10c2a83bcc0a7c418391179c4
     return HttpResponse(response)
 
 def display_class_name(request):
