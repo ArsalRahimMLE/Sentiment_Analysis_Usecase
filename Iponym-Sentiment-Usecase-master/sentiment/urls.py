@@ -27,6 +27,6 @@ urlpatterns = [
      path('data_statistics/wordcloud', views.word_cloud),
      path('data_statistics/age', views.display_age),
      path('data_statistics/ratings', views.display_rating),
-     path('data_statistics/recommended', views.display_recommended),
+     path('data_statistics/recommended', views.get_recommended),
      path('data_statistics/class', views.display_class_name),
  ]

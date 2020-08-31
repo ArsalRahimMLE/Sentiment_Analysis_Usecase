@@ -36,19 +36,24 @@ def data_stats(request):
     return JsonResponse(response)
 
 def word_cloud(request):
-    response = entry_point.make_word_cloud()
+    category = request.GET.get('product')
+    response = entry_point.make_word_cloud(category)
     return HttpResponse(response)
 
 def display_age(request):
-    response = entry_point.display_age()
+    category = request.GET.get('product')
+    response = entry_point.display_age(category)
     return HttpResponse(response)
+
 
 def display_rating(request):
-    response = entry_point.ratings()
+    category = request.GET.get('product')
+    response = entry_point.ratings(category)
     return HttpResponse(response)
 
-def display_recommended(request):
-    response = entry_point. recommended_items()
+def get_recommended(request):
+    category = request.GET.get('product')
+    response = entry_point.recommended_items(category)
     return HttpResponse(response)
 
 def display_class_name(request):

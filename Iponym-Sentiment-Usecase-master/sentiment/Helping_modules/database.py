@@ -2,6 +2,8 @@ import pymongo
 import pandas as pd
 import scipy as sp
 import numpy as np
+
+
 def establish_conn(coll_name='women_reviews'):
     client = pymongo.MongoClient()
     db = client['review_data']
@@ -9,9 +11,8 @@ def establish_conn(coll_name='women_reviews'):
     return coll
 
 
-def fetch_data():
-    conn = establish_conn()
+def fetch_data(collection='women_reviews'):
+    conn = establish_conn(collection)
     df = conn.find({}, {"_id": 0})
     df = pd.DataFrame(list(df))
     return df
-

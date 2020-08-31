@@ -4,6 +4,7 @@ from ..Helping_modules import database, model
 import pandas as pd
 import json
 
+
 def get_model_metrics():
     """
     calculate model metrics such as recall, precision etc
@@ -13,9 +14,9 @@ def get_model_metrics():
     x_test = pd.read_csv("staticfiles/X_test_data.csv")
     y_test = pd.read_csv("staticfiles/y_test_data.csv")
     # 02 load model #
-    rf = model.fetch_model_rf()
+    lr = model.fetch_model()
     # 03 run model on testing data #
-    ypred = rf.predict(x_test)
+    ypred = lr.predict(x_test)
     # 04 calculate model metrics #
     accuracy = model.calculate_accuracy(ypred, y_test)
     precision = model.calculate_precision(ypred, y_test)
@@ -26,7 +27,7 @@ def get_model_metrics():
 
 
 def getting_sentiment():
-#fetching data from database#
+    # fetching data from database#
     positive_count = 0
     negative_count = 0
 
@@ -36,20 +37,22 @@ def getting_sentiment():
         if i == 1:
             positive_count = positive_count + 1
         else:
-            negative_count = negative_count+1
-    pos_percentage = (positive_count/total)*100
-    neg_percentage = (negative_count/total)*100
-    response = {'Positive Sentiments': positive_count, 'Negative Sentiments': negative_count,'Positive':pos_percentage, 'Negative':neg_percentage}
+            negative_count = negative_count + 1
+    pos_percentage = (positive_count / total) * 100
+    neg_percentage = (negative_count / total) * 100
+    response = {'Positive Sentiments': positive_count, 'Negative Sentiments': negative_count,
+                'Positive': pos_percentage, 'Negative': neg_percentage}
     return response
+
 
 def display_reviews():
     df = database.fetch_data()
-    review_sent = df[['Review Text','Sentiment']]
-    first = review_sent.loc[[1],['Review Text','Sentiment']]
-    second = review_sent.loc[[2],['Review Text','Sentiment']]
-    third = review_sent.loc[[5],['Review Text','Sentiment']]
-    fourth = review_sent.loc[[15],['Review Text','Sentiment']]
-    fifth = review_sent.loc[[17],['Review Text','Sentiment']]
+    review_sent = df[['Review Text', 'Sentiment']]
+    first = review_sent.loc[[1]]
+    second = review_sent.loc[[2]]
+    third = review_sent.loc[[5]]
+    fourth = review_sent.loc[[15]]
+    fifth = review_sent.loc[[17]]
     response = (first, second, third, fourth, fifth)
     return response
 
@@ -93,24 +96,24 @@ def get_model_comparison():
     cm_rf = model.display_confusion_matrix(ypred_rf, y_test)
     cm_svm = model.display_confusion_matrix(ypred_svm, y_test)
     # roc curves
-    roc = model.display_roc_curve(y_test,ypred)
-    roc_nb = model.display_roc_curve(y_test,ypred_nb)
+    roc = model.display_roc_curve(y_test, ypred)
+    roc_nb = model.display_roc_curve(y_test, ypred_nb)
     roc_rf = model.display_roc_curve(y_test, ypred_rf)
     roc_svm = model.display_roc_curve(y_test, ypred_svm)
     # 08 response to request #
     accuracies = {'Logistic Regression': accuracy, 'Naive Bayes': accuracy_nb,
-                 'Random Forest': accuracy_rf, 'SVM ': accuracy_svm}
+                  'Random Forest': accuracy_rf, 'SVM ': accuracy_svm}
     precisions = {'Logistic Regression': precision, 'Naive Bayes': precision_nb,
                   'Random Forest': precision_rf, 'SVM ': precision_svm}
     recalls = {'Logistic Regression': recall, 'Naive Bayes': recall_nb,
-                  'Random Forest': recall_rf, 'SVM = ': recall_svm}
+               'Random Forest': recall_rf, 'SVM = ': recall_svm}
     confusion_matrices = {'Logistic Regression': cm.tolist(), 'Naive Bayes': cm_nb.tolist(),
-               'Random Forest': cm_rf.tolist(), 'SVM = ': cm_svm.tolist()}
-    roc_curves = {'Logistic Regression':  roc.tolist(), 'Naive Bayes': roc_nb.tolist(),
-               'Random Forest': roc_rf.tolist(), 'SVM = ': roc_svm.tolist()}
-    response = {'Accuracy': accuracies, 'Precision': precisions, 'Recall': recalls,'Confusion_matrix': confusion_matrices, 'ROC_Curve': roc_curves}
+                          'Random Forest': cm_rf.tolist(), 'SVM = ': cm_svm.tolist()}
+    roc_curves = {'Logistic Regression': roc.tolist(), 'Naive Bayes': roc_nb.tolist(),
+                  'Random Forest': roc_rf.tolist(), 'SVM = ': roc_svm.tolist()}
+    response = {'Accuracy': accuracies, 'Precision': precisions, 'Recall': recalls,
+                'Confusion_matrix': confusion_matrices, 'ROC_Curve': roc_curves}
     return response
-
 
 
 def search_by_keyword(keyword):
@@ -124,45 +127,68 @@ def search_by_keyword(keyword):
     response = response.to_json()
     return response
 
+
 def get_data_stats():
     df = database.fetch_data()
     test = pd.read_csv("staticfiles/X_test_data.csv")
     data_length = len(df)
     test_len = len(test)
-    train_len = len(df)-len(test)
-    response = {'Length of data': data_length, 'Train data': train_len, 'Test data' : test_len}
+    train_len = len(df) - len(test)
+    response = {'Length of data': data_length, 'Train data': train_len, 'Test data': test_len}
     return response
 
-def make_word_cloud():
+
+def make_word_cloud(product):
     # 01 Fetching data
     df = database.fetch_data()
-    """ 02 taking clean_reviews column, splitting it in words then 
-        counting the frequency of each word, taking top 100 frequencies
-    """""
-    response = df.Clean_Reviews.str.split(expand=True).stack().value_counts()[:100]
+    # 02 filter dataset
+    if product:
+        selected = df[df['Class Name'] == product]
+        response = selected.Clean_Reviews.str.split(expand=True).stack().value_counts()[:100]
+    else:
+        response = df.Clean_Reviews.str.split(expand=True).stack().value_counts()[:100]
     response = response.to_json()
     return response
 
-def display_age():
+
+def display_age(product):
     # 01 Fetch data
     df = database.fetch_data()
-    response = df.Age.value_counts()
+    # 02 filter dataset
+    if product:
+        selected = df[df['Class Name'] == product]
+        response = selected.Age.value_counts()
+    else:
+        response = df.Age.value_counts()
     response = response.to_json()
     return response
 
-def ratings():
+
+def ratings(product):
     # 01 Fetch data
-    df = database.fetch_data()
-    response = df.original_rating.value_counts()
+    df = database.fetch_data('original_data')
+    # 02 filter dataset
+    if product:
+        selected = df[df['Class Name'] == product]
+        response = selected.Rating.value_counts()/len(df)*100
+    else:
+        response = df.Rating.value_counts()/len(df)*100
     response = response.to_json()
     return response
 
-def recommended_items():
+
+def recommended_items(product):
     # 01 fetch data
     df = database.fetch_data()
-    response = df['Recommended IND'].value_counts()
+    if product:
+        # 02 filter dataframe with respect to product #
+        selected = df[df['Class Name'] == product]
+        response = selected['Recommended IND'].value_counts()
+    else:
+        response = df['Recommended IND'].value_counts()
     response = response.to_json()
     return response
+
 
 def class_name():
     # 01 fetch data
