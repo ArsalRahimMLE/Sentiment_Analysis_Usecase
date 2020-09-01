@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .Controller import entry_point
 import json
+
+
 # Create your views here.
 
 
@@ -35,10 +37,12 @@ def data_stats(request):
     response = entry_point.get_data_stats()
     return JsonResponse(response)
 
+
 def word_cloud(request):
     category = request.GET.get('product')
     response = entry_point.make_word_cloud(category)
     return HttpResponse(response)
+
 
 def display_age(request):
     category = request.GET.get('product')
@@ -51,16 +55,18 @@ def display_rating(request):
     response = entry_point.ratings(category)
     return HttpResponse(response)
 
-<<<<<<< HEAD
+
 def get_recommended(request):
     category = request.GET.get('product')
     response = entry_point.recommended_items(category)
-=======
+    return HttpResponse(response)
+
+
 def display_recommended(request):
     category = request.GET.get('product')
-    response = entry_point. recommended_items(category)
->>>>>>> ef43f3479104efa10c2a83bcc0a7c418391179c4
+    response = entry_point.recommended_items(category)
     return HttpResponse(response)
+
 
 def display_class_name(request):
     response = entry_point.class_name()

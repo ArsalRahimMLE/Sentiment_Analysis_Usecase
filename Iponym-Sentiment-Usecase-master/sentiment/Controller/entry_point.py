@@ -27,19 +27,24 @@ def get_model_metrics():
 
 
 def getting_sentiment():
-    # fetching data from database#
+    # 01 defining two variables to store positive and negative sentiment count
     positive_count = 0
     negative_count = 0
-
+    # 02 fetching data from database#
     df = database.fetch_data()
+    # 03 length of the data
     total = len(df)
+    '''Iterating through rows of the column sentiments, increase positive count by one if sentiment=1
+    increase negative count for zero'''
     for i in df.Sentiment:
         if i == 1:
             positive_count = positive_count + 1
         else:
             negative_count = negative_count + 1
+    # 04 calculating percentage of positive and negative sentiments
     pos_percentage = (positive_count / total) * 100
     neg_percentage = (negative_count / total) * 100
+    # 05 saving response into a dictionary
     response = {'Positive Sentiments': positive_count, 'Negative Sentiments': negative_count,
                 'Positive': pos_percentage, 'Negative': neg_percentage}
     return response
@@ -129,6 +134,8 @@ def search_by_keyword(keyword):
 
 
 def get_data_stats():
+    ''' This function calculates the statistics of the data i.e. length of dataset,
+    length of the training data snd the test data and saves the response inn a dictionary '''
     df = database.fetch_data()
     test = pd.read_csv("staticfiles/X_test_data.csv")
     data_length = len(df)
@@ -141,7 +148,7 @@ def get_data_stats():
 def make_word_cloud(product):
     # 01 Fetching data
     df = database.fetch_data()
-    # 02 filter dataset
+    # 02 filter dataset for selection
     if product:
         selected = df[df['Class Name'] == product]
         response = selected.Clean_Reviews.str.split(expand=True).stack().value_counts()[:100]
